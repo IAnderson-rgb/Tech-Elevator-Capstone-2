@@ -8,6 +8,7 @@ namespace ProjectOrganizer.Models
 {
     public class Project
     {
+
         /// <summary>
         /// The project's id.
         /// </summary>

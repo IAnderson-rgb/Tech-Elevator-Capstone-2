@@ -9,6 +9,7 @@ namespace ProjectOrganizer.DAL
 {
     public interface IProjectDAO
     {
+        
         /// <summary>
         /// Returns all projects.
         /// </summary>
