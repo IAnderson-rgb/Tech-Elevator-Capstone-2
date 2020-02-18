@@ -14,7 +14,7 @@ namespace ProjectOrganizerTests.DAL
     public class DepartmentSqlDAOTests: ProjectOrganizerDAOTests
     {
         
-
+        [TestMethod]
         public void GetDepartments_ShouldReturnRightNumberOfDepartments() {
             //Arrange
             const int numberOfDeptsAddedForTests = 1;
@@ -26,6 +26,45 @@ namespace ProjectOrganizerTests.DAL
 
             //Assert
             Assert.AreEqual(numberOfDeptsAddedForTests, departments.Count, "GetDepartments doesn't return correct number for one department");
+        }
+
+        [DataTestMethod]
+        [DataRow("DeptTest2")]
+        public void CreateDepartment_ShouldCreateNewDept(string newName)
+        {
+            //Arrange
+            Department newDept = new Department();
+            newDept.Name = newName;
+            Department newDept2 = new Department();
+            newDept2.Name = newName+'2';
+
+
+            DepartmentSqlDAO dao = new DepartmentSqlDAO(ConnectionString);
+
+
+            //Act
+            int deptId = dao.CreateDepartment(newDept);
+            int deptId2 = dao.CreateDepartment(newDept2);
+
+            //Assert
+            Assert.AreEqual(3,dao.GetDepartments().Count, "Department ID not being returned correctly");
+
+        }
+
+        [TestMethod]
+        public void UpdateDeparmtment_ShouldChangeDepartmentName() {
+            //Arrange
+            DepartmentSqlDAO dao = new DepartmentSqlDAO(ConnectionString);
+            Department newDepartment = dao.GetDepartments()[0];
+            newDepartment.Name = "TestName";
+            
+
+            //Act
+            dao.UpdateDepartment(newDepartment);
+            IList<Department> departments = dao.GetDepartments();
+
+            //Assert
+            Assert.AreEqual("TestName", departments[0].Name);
         }
 
     }

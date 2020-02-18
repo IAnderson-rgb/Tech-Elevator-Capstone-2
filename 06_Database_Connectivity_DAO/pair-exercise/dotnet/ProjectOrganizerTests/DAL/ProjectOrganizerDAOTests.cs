@@ -4,6 +4,7 @@ using System.IO;
 using System.Transactions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ProjectOrganizerTests.DAL;
 
 namespace ProjectOrganizerTests.DAL
 {

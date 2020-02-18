@@ -20,6 +20,6 @@ INSERT INTO project (name,from_date,to_date)
 VALUES ('TestProject', '2019-12-12', '2020-01-01');
 DECLARE @newProjectId int = (SELECT @@IDENTITY);
 
--- Return the id of the fake city
+-- Return the id of the fake project_employee
 INSERT INTO project_employee(project_id,employee_id)
 VALUES (@newProjectId,@newEmployeeId);
