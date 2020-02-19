@@ -64,6 +64,7 @@ namespace ProjectOrganizerTests.DAL
             IList<Department> departments = dao.GetDepartments();
 
             //Assert
+            //departments[0] is the only thing in the database during testing set by sql file
             Assert.AreEqual("TestName", departments[0].Name);
         }
 
