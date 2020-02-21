@@ -30,9 +30,9 @@ namespace Capstone
 
         public void RunCLI()
         {
-            Console.WriteLine(getReservationDatesFromUser()[0]); 
-        //PrintHeader();
-        IList<Park> parks = ViewParksListMenu();
+            //PrintHeader();
+            IList<Park> parks = ViewParksListMenu();
+
             int parkChoice = 0;
 
             while (true)
@@ -56,8 +56,11 @@ namespace Capstone
                     else
                     {
                         selectedPark = parks[parkChoice - 1];
-                        ParksMenu(parks[parkChoice-1]);
+                        parks[parkChoice - 1].ToString();
                         Console.WriteLine(selectedPark.ToString());
+                        Console.WriteLine();
+                        ParksMenu(parks[parkChoice-1]);
+                        
                     }
                 }
 
@@ -69,16 +72,24 @@ namespace Capstone
              }
         }
 
+        /// <summary>
+        /// Display Menu Options
+        /// </summary>
+        /// /// <param name="parkSelected">Park where reservation information can be gotten</param>
         private void ParksMenu(Park parkSelected)
         {
             const int Option_ViewCampgrounds = 1;
             const int Option_SearchForReservation = 2;
             const int Option_Return = 3;
 
-            List<Reservation> reservationList = new List<Reservation>();
+            IList<Site> siteList = new List<Site>();
 
             while (true)
             {
+                Console.WriteLine("1) View Campgrounds");
+                Console.WriteLine("2) Search Park for Reservation");
+                Console.WriteLine("3) Return to previous menu");
+
                 string command = Console.ReadLine();
 
                 int commandSelected = -1;
@@ -91,15 +102,19 @@ namespace Capstone
                         Console.WriteLine("Invalid input. Please enter a valid numerical input.");
                     }
 
-                    else if (commandSelected == Option_Return)
+                    else if (commandSelected == Option_ViewCampgrounds)
                     {
                         return;
                     }
                     else if (commandSelected == Option_SearchForReservation)
                     {
                         string[] reservationDates = getReservationDatesFromUser();
-                        //reservationList = reservationDAO.GetAvailableReservations(parkSelected, reservationDates[0], reservationDates[1]);
-
+                        
+                        siteList = siteDAO.GetAvailableReservationsWholePark(parkSelected, reservationDates[0], reservationDates[1]);
+                        
+                        for (int i = 0; i < siteList.Count; i++) {
+                            Console.WriteLine($"{i + 1}) " + siteList[i].ToString());    
+                        }
                     }
 
                 }
@@ -118,37 +133,53 @@ namespace Capstone
         /// <summary>
         /// Gets dates from user via CLI. Returns start date in position [0] and end date in position [1]
         /// </summary>
-
         private string[] getReservationDatesFromUser()
         {
             string[] reservationDates = new string[2];
 
             bool isDate = false;
 
-            Console.Write("What is the arrival Date YYYY-MM-DD: ");
-            reservationDates[0] = Console.ReadLine();
+            
 
             while (!isDate)
             {
                 int year;
                 int month;
                 int day;
+
+
+
+                Console.Write("What is the arrival Date YYYY-MM-DD: ");
+                reservationDates[0] = Console.ReadLine();
+
                 if (int.TryParse(reservationDates[0].Substring(0, 4), out year) && int.TryParse(reservationDates[0].Substring(5, 2), out month) && int.TryParse(reservationDates[0].Substring(8, 2), out day))
                 {
-                    isDate = ValidDate(year, month, day);
+                    isDate = ValidDate(year, month, day);//check date is in valid range
                 }
                 else 
                 {
                     Console.WriteLine("Invalid date format. What is the arrival Date YYYY-MM-DD: ");
                 }
 
+                
                 Console.Write("What is the departure Date YYYY-MM-DD: ");
                 reservationDates[1] = Console.ReadLine();
-
+                
+                if (int.TryParse(reservationDates[1].Substring(0, 4), out year) && int.TryParse(reservationDates[1].Substring(5, 2), out month) && int.TryParse(reservationDates[1].Substring(8, 2), out day))
+                {
+                    isDate = ValidDate(year, month, day);//check date is in valid range
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format. What is the arrival Date YYYY-MM-DD: ");
+                }
             }
             return reservationDates;
         }
 
+        /// <summary>
+        /// Check that date is within a year of today and that the month and day are make a valid date.
+        /// </summary>
         private static bool ValidDate(int year, int month, int day)
         {
             bool isDate=false;
