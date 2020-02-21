@@ -53,7 +53,7 @@ namespace Capstone
                     else
                     {
                         selectedPark = parks[parkChoice - 1];
-                        ///STOPPING POINT
+                        ParksMenu(parks[parkChoice-1]);
                         Console.WriteLine(selectedPark.ToString());
                     }
                 }
@@ -66,7 +66,52 @@ namespace Capstone
              }
         }
 
-        private IList<Park>ViewParksListMenu()
+        private void ParksMenu(Park parkSelected)
+        {
+            const int Option_ViewCampgrounds = 1;
+            const int Option_SearchForReservation = 2;
+            const int Option_Return = 3;
+
+            List<Reservation> reservationList = new List<Reservation>();
+
+            while (true)
+            {
+                string command = Console.ReadLine();
+
+                int commandSelected = -1;
+
+                if (int.TryParse(command, out commandSelected))
+                {
+
+                    if (commandSelected > Option_Return)
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid numerical input.");
+                    }
+
+                    else if (commandSelected == Option_Return)
+                    {
+                        return;
+                    }
+                    else if (commandSelected == Option_SearchForReservation)
+                    {
+                        //reservationList = reservationDAO.GetAvailableReservations(parkSelected);
+
+                    }
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid numerical input.");
+                }
+
+
+
+
+                return;
+            }
+        }
+
+        private IList<Park> ViewParksListMenu()
         {
             IList<Park> parksList = parkDAO.GetAllParks();
             

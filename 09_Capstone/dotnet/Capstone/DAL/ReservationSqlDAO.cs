@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Capstone.Models;
 
+
 namespace Capstone.DAL
 {
     public class ReservationSqlDAO : IReservationDAO
@@ -20,9 +21,71 @@ namespace Capstone.DAL
             connectionString = databaseconnectionString;
         }
 
-        public IList<Reservation> GetAvailableReservations(int campgroundId)
+        public IList<Reservation> GetAvailableReservationsWholePark(Park parkSelected, string startDate, string endDate) 
         {
             IList<Reservation> reservations = new List<Reservation>();
+
+
+
+
+            return reservations;
+        }
+        public IList<Reservation> GetAvailableReservationsSingleCapmground(int campgroundId, string startDate, string endDate)
+        {
+            IList<Reservation> reservations = new List<Reservation>();
+            //Get list of sites at single campground available during the given dates
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(@"SELECT * 
+                        FROM site
+                        LEFT JOIN reservation on site.site_id = reservation.site_id
+                        JOIN campground on site.campground_id = campground.campground_id
+                        WHERE site.campground_id = @campgroundId AND campground.open_from_mm <= MONTH(@startDate) AND campground.open_to_mm >= MONTH(@endDate)
+
+                        EXCEPT 
+
+                        SELECT * 
+                        FROM site
+                        LEFT JOIN reservation on site.site_id = reservation.site_id
+                        JOIN campground on site.campground_id = campground.campground_id
+                        WHERE site.campground_id = @campgroundId AND reservation.from_date <= @endDate 
+                        AND reservation.to_date >= @startDate;", conn);
+
+                    cmd.Parameters.AddWithValue("@campgroundId", campgroundId);
+                    cmd.Parameters.AddWithValue("@startDate", startDate);
+                    cmd.Parameters.AddWithValue("@endDate", endDate);
+
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        
+                        Reservation reservation = new Reservation();
+                        reservation.ReservationId = Convert.ToInt32(reader["reservation_id"]);
+                        reservation.SiteId = Convert.ToInt32(reader["site_id"]);
+                        reservation.Name = Convert.ToString(reader["name"]);
+                        reservation.FromDate = Convert.ToString(reader["from_date"]);
+                        reservation.ToDate= Convert.ToString(reader["to_date"]);
+                        reservation.CreateDate = DateTime.Today.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+
+                        reservations.Add(reservation);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("Error getting reservations.");
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
+        
+
 
             return reservations;
         }

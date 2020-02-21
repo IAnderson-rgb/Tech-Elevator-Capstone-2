@@ -13,6 +13,7 @@ namespace Capstone
     {
         static void Main(string[] args)
         {
+            //Console.WriteLine(DateTime.Today.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture));
             // Get the connection string from the appsettings.json file
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
