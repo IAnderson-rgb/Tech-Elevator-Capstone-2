@@ -30,6 +30,13 @@ namespace Capstone.DAL
 
             return reservations;
         }
+
+        /// <summary>
+        /// Gets a list of available reservations given a single campground.
+        /// </summary>
+        /// <param name="campgroundId">campground ID from sql database</param>
+        /// <param name="startDate">requested date reservation will begin</param>
+        /// <param name="endDate">requested date reservation will end</param>
         public IList<Reservation> GetAvailableReservationsSingleCapmground(int campgroundId, string startDate, string endDate)
         {
             IList<Reservation> reservations = new List<Reservation>();

@@ -12,6 +12,8 @@ namespace Capstone
 {
     public class NPCampsiteReservationCLI
     {
+        
+
         private Park selectedPark = new Park();
         private  IParkDAO parkDAO;
         private ICampgroundDAO campgroundDAO;
@@ -28,8 +30,9 @@ namespace Capstone
 
         public void RunCLI()
         {
-            //PrintHeader();
-            IList<Park> parks = ViewParksListMenu();
+            Console.WriteLine(getReservationDatesFromUser()[0]); 
+        //PrintHeader();
+        IList<Park> parks = ViewParksListMenu();
             int parkChoice = 0;
 
             while (true)
@@ -94,7 +97,8 @@ namespace Capstone
                     }
                     else if (commandSelected == Option_SearchForReservation)
                     {
-                        //reservationList = reservationDAO.GetAvailableReservations(parkSelected);
+                        string[] reservationDates = getReservationDatesFromUser();
+                        //reservationList = reservationDAO.GetAvailableReservations(parkSelected, reservationDates[0], reservationDates[1]);
 
                     }
 
@@ -109,6 +113,61 @@ namespace Capstone
 
                 return;
             }
+        }
+
+        /// <summary>
+        /// Gets dates from user via CLI. Returns start date in position [0] and end date in position [1]
+        /// </summary>
+
+        private string[] getReservationDatesFromUser()
+        {
+            string[] reservationDates = new string[2];
+
+            bool isDate = false;
+
+            Console.Write("What is the arrival Date YYYY-MM-DD: ");
+            reservationDates[0] = Console.ReadLine();
+
+            while (!isDate)
+            {
+                int year;
+                int month;
+                int day;
+                if (int.TryParse(reservationDates[0].Substring(0, 4), out year) && int.TryParse(reservationDates[0].Substring(5, 2), out month) && int.TryParse(reservationDates[0].Substring(8, 2), out day))
+                {
+                    isDate = ValidDate(year, month, day);
+                }
+                else 
+                {
+                    Console.WriteLine("Invalid date format. What is the arrival Date YYYY-MM-DD: ");
+                }
+
+                Console.Write("What is the departure Date YYYY-MM-DD: ");
+                reservationDates[1] = Console.ReadLine();
+
+            }
+            return reservationDates;
+        }
+
+        private static bool ValidDate(int year, int month, int day)
+        {
+            bool isDate=false;
+            if (year < DateTime.Today.Year || year > DateTime.Today.Year + 1)
+            {
+                Console.WriteLine("Invalid year. Please enter a year no more than one year in the future.");
+            }
+            else if (month < 1 || month > 12)
+            {
+                Console.WriteLine("Invalid month. Please enter a number 1-12 as the month.");
+            }
+            else if (day < 1 || day > DateTime.DaysInMonth(year, month))
+            {
+                Console.WriteLine("Invalid number of days. Please enter a valid number for days.");
+            }
+
+            else { isDate = true; }
+
+            return isDate;
         }
 
         private IList<Park> ViewParksListMenu()
