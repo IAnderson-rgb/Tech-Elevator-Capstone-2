@@ -23,8 +23,9 @@ namespace Capstone.DAL
 
 
 
-        public Reservation MakeAReservation(int siteId, string customerName, string startDate, string endDate)
+        public Reservation MakeAReservation(Site site, string customerName, string startDate, string endDate)
         {
+            int newReservationId = -1;//-1 for non value
             Reservation reservations = new Reservation();
             try
             {
@@ -33,33 +34,21 @@ namespace Capstone.DAL
                     conn.Open();
 
                     // Create the command to create a reservation
-                    SqlCommand cmd = new SqlCommand(@"INSERT INTO reservation VALUES (@countrycode, @language, @isofficial, @percentage);
-                                                    @@Identity
-                                                    SELECT * FROM reservation WHERE reservation.reservation_id = @@Identity);", conn);
-                    cmd.Parameters.AddWithValue("@startDate", startDate);
+                    SqlCommand cmd = new SqlCommand(@"INSERT INTO reservation (site_id, name, from_date, to_date, create_date)
+                    VALUES (@siteNumber, @customerName, @beginDate, @endDate, GETDATE());
+                    SELECT reservation_id FROM reservation WHERE reservation.reservation_id = SCOPE_IDENTITY();", conn);
+                    cmd.Parameters.AddWithValue("@siteNumber", site.SiteNumber);
+                    cmd.Parameters.AddWithValue("@beginDate", startDate);
                     cmd.Parameters.AddWithValue("@endDate", endDate);
-                    cmd.Parameters.AddWithValue("@countrycode", newLanguage.CountryCode);
-                    cmd.Parameters.AddWithValue("@language", newLanguage.Name);
-                    cmd.Parameters.AddWithValue("@isofficial", newLanguage.IsOfficial);
-                    cmd.Parameters.AddWithValue("@percentage", newLanguage.Percentage);
+                    cmd.Parameters.AddWithValue("@customerName", customerName);
 
 
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    //SELECT reservation_id FROM reservation WHERE reservation.reservation_id = SCOPE_IDENTITY()
+                    //newReservationId = cmd.ExecuteScalar();
+                    newReservationId = Convert.ToInt32(cmd.ExecuteScalar());
 
-                    while (reader.Read())
-                    {
+                    Console.WriteLine("The reservation has been made and the confirmation id is " + newReservationId);
 
-                        Site site = new Site();
-                        site.SiteId = Convert.ToInt32(reader["site_id"]);
-                        site.CampgroundId = Convert.ToInt32(reader["campground_id"]);
-                        site.SiteNumber = Convert.ToInt32(reader["site_number"]);
-                        site.MaxOccupancy = Convert.ToInt32(reader["site_occupancy"]);
-                        site.Accessible = Convert.ToBoolean(reader["accessible"]);
-                        site.MaxRVLength = Convert.ToInt32(reader["max_rv_length"]);
-                        site.Utilities = Convert.ToBoolean(reader["utilities"]);
-
-                        sites.Add(site);
-                    }
                 }
             }
             catch (SqlException ex)

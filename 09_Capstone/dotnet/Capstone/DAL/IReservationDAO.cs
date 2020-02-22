@@ -15,6 +15,6 @@ namespace Capstone.DAL
         /// <param name="siteId">The site Id to search for.</param>
         /// <param name="customerName">The customer name.</param>
         /// <returns></returns>
-        Reservation MakeAReservation(int siteId, string customerName,string startDate, string endDate);
+        Reservation MakeAReservation(Site site, string customerName,string startDate, string endDate);
     }
 }

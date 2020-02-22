@@ -13,7 +13,6 @@ namespace Capstone
 {
     public class NPCampsiteReservationCLI
     {
-        
 
         private Park selectedPark = new Park();
         private  IParkDAO parkDAO;
@@ -32,6 +31,7 @@ namespace Capstone
         public void RunCLI()
         {
             //PrintHeader();
+            
             IList<Park> parks = ViewParksListMenu();
 
             int parkChoice = 0;
@@ -113,7 +113,7 @@ namespace Capstone
                     }
                     else if (commandSelected == Option_SearchForReservation)
                     {
-                        string[] reservationDates = getReservationDatesFromUser();
+                        string[] reservationDates = GetReservationDatesFromUser();
                         
                         siteList = siteDAO.GetAvailableReservationsWholePark(parkSelected, reservationDates[0], reservationDates[1]);
                         
@@ -245,8 +245,8 @@ namespace Capstone
                         {
                             Console.Write("What name should the reservation be made under?");
                             string customerName = Console.ReadLine();
-                            reservationDAO.MakeAReservation(site.SiteId, reservationDates[0], reservationDates[1], customerName);
-                           
+                            reservationDAO.MakeAReservation(site, customerName, reservationDates[0], reservationDates[1]);
+                            return;
                         }
                     }
                 }
