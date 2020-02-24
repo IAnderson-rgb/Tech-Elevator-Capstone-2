@@ -38,7 +38,9 @@ namespace Capstone
 
             while (true)
              {
+                Console.Write("Enter a park number:");   
                  string command = Console.ReadLine();
+                Console.WriteLine();
 
 
                 //Menu Options - Park List
@@ -90,6 +92,7 @@ namespace Capstone
 
             while (true)
             {
+                Console.WriteLine("Select a Command");
                 Console.WriteLine("1) View Campgrounds");
                 Console.WriteLine("2) Search Park for Reservation");
                 Console.WriteLine("3) Return to previous menu");
@@ -108,8 +111,9 @@ namespace Capstone
 
                     else if (commandSelected == Option_ViewCampgrounds)
                     {
-                        
+                        Console.Clear();
                         campGoundsMenu(parkSelected.ParkId, parkSelected.Name);
+                        
                     }
                     else if (commandSelected == Option_SearchForReservation)
                     {

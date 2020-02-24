@@ -16,8 +16,8 @@ namespace Capstone.Models
 
         public override string ToString()
         {
-            return ParkId.ToString().PadRight(6) + Name.PadRight(30) + EstablishedDate.PadRight(30) + 
-                Area.ToString().PadRight(10) + Vistiors.ToString().PadRight(10)+'\n'+Description;
+            return ParkId.ToString()+") " + Name.PadRight(5)+" "+"National Park" +'\n'+ "Location:"+" "+ Location.PadRight(5) +'\n'+
+               "Established:"+" "+ EstablishedDate.Substring(0,9).PadRight(5) +'\n'+ "Area:"+" "+ Area.ToString().PadRight(5) +'\n'+ "Annual Visitors:"+" "+ Vistiors.ToString().PadRight(5)+'\n'+'\n'+ Description;
         }
     }
 }
