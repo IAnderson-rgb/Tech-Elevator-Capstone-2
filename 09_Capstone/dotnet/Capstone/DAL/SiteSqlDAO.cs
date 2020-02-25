@@ -107,15 +107,16 @@ namespace Capstone.DAL
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(@"SELECT * 
+                    SqlCommand cmd = new SqlCommand(@"SELECT site.site_id, site.campground_id, site.site_number, site.max_occupancy, site.accessible, site.max_rv_length, site.utilities 
                         FROM site
                         LEFT JOIN reservation on site.site_id = reservation.site_id
                         JOIN campground on site.campground_id = campground.campground_id
                         WHERE site.campground_id = @campgroundId AND campground.open_from_mm <= MONTH(@startDate) AND campground.open_to_mm >= MONTH(@endDate)
+                        
 
                         EXCEPT 
 
-                        SELECT * 
+                        SELECT site.site_id, site.campground_id, site.site_number, site.max_occupancy, site.accessible, site.max_rv_length, site.utilities 
                         FROM site
                         LEFT JOIN reservation on site.site_id = reservation.site_id
                         JOIN campground on site.campground_id = campground.campground_id

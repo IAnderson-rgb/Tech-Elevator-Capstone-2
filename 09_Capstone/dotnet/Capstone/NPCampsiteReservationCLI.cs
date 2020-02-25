@@ -170,6 +170,7 @@ namespace Capstone
                     if (optionSelecton == Option_SearchAvailableReservation)
                     {
                         SearchForCampgroundReservationMenu(campgrounds);
+                        return;
                     }
                     else if (optionSelecton == Option_ReturnPreviousScreen) 
                     {
@@ -243,6 +244,11 @@ namespace Capstone
                 Console.Write("Which site should be reserved (enter 0 to cancel)?");
                 if (int.TryParse(Console.ReadLine(), out siteChoice))
                 {
+                    if (siteChoice == 0) 
+                    { 
+                        return; 
+                    }
+                    
                     foreach (Site site in sites)
                     {
                         if (site.SiteNumber == siteChoice)
